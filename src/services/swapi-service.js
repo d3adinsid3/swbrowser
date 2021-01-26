@@ -16,28 +16,67 @@ export default class SwapiService {
 
     async getAllPeople(){
         const res = await this.getResource(`/people/`);
-        return res.results;
+        return res.results.map(this._transformPerson);
     }
-    getPerson(id){
-        return this.getResource(`/people/${id}`);
+   async getPerson(id){
+        const person = await this.getResource(`/people/${id}`);
+        return this._transformPerson(person);
     }
 
 
     async getAllShips(){
         const res = await this.getResource(`/starships/`);
-        return res.results;
+        return res.results.map(this._transformShip);
     }
-    getShip(id){
-        return this.getResource(`/starships/${id}`);
+    async getShip(id){
+        const ship = await this.getResource(`/starships/${id}`);
+        return this._transformShip(ship);
     }
 
 
     async getAllPlanets(){
         const res = await this.getResource(`/planets/`);
-        return res.results;
+        return res.results.map(this._transformPlanet);
     }
-    getPlanet(id){
-        return this.getResource(`/planets/${id}`);
+    async getPlanet(id){
+        const planet = await this.getResource(`/planets/${id}`);
+        return this._transformPlanet(planet);
+    }
+
+    _extractId(item){
+        const idReg = /\/([0-9]*)\/$/;
+        return item.url.match(idReg)[1];
+    }
+    
+
+    _transformShip (ship){
+        return {
+            id: this._extractId(ship),
+            name: ship.name,
+            model: ship.model,
+            manufacturer:  ship.manufacturer,
+            length: ship.length,
+        }
+    }
+
+    _transformPerson (person){
+        return {
+            id: this._extractId(person),
+            name: person.name,
+            height: person.height,
+            mass:  person.mass,
+            hair_color: person.hair_color,
+        }
+    }
+
+    _transformPlanet(planet) {
+        return {
+            id: this._extractId(planet),
+            name: planet.name,
+            population: planet.population,
+            rotationPeriod: planet.rotation_period,
+            diameter: planet.diameter
+        };
     }
 
 
