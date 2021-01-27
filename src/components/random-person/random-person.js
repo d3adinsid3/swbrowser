@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './random-person.css';
+import Loading from '../loading';
 
 import SwapiService from '../../services/swapi-service'
 
